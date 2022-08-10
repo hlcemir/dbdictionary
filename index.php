@@ -47,8 +47,8 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Kelimeyi Giriniz</h5>
-                            <input type="text" name="kelime" class="form-control" placeholder="Aramak istediğiniz Kelimeyi Giriniz.." >
-                            <input class="btn btn-primary mt-2" type="submit" value="Sözlükte Ara">
+                            <input type="text" name="kelime" class="form-control" placeholder="Aramak istediğiniz Kelimeyi Giriniz.." id="aranankelime">
+                            <input class="btn btn-primary mt-2" type="submit" value="Sözlükte Ara" id="ara">
                         </div>
                         <div class="card-footer text-muted">
                         </div>
@@ -57,12 +57,18 @@
                     <?php
                     require_once 'baglan.php';
                     global $baglan;
+
+                    //        ******* KELİMEYİ DB'DE BULUP ANLAMIYLA BİRLİKTE GETİRME *******
+
                     if ($_GET){
                         $kelime = $_GET['kelime'];
                         $kelime = mb_strtoupper($kelime,"UTF-8");
 
                         if (!$kelime){
-                            echo"Arama yapabilmek için kelime giriniz !";
+
+                            echo"<div class='alert alert-danger mt-5' style='text-align: center' role='alert'>
+                                          Lütfen Kelime Giriniz ! </div>";
+
                         }else{
                             $sorgu = $baglan->prepare("SELECT * FROM dictionary WHERE name = ?");
                             $sorgu->execute(array($kelime));
@@ -76,8 +82,27 @@
 
                                 }
 
+
+                                //        ******* BENZER KELİME SORGUSU *******
+
+                                $sorgu2=$baglan->prepare("SELECT * FROM `dictionary` WHERE name <> ? AND name LIKE '$kelime%'");
+                                $sorgu2->execute(array($kelime));
+
+                                echo "<br><br>";
+                                echo "<b>".$kelime." Kelimesine benzer (".$sorgu2->rowCount().")  adet sonuç bulundu </b>";
+                                echo "<br>";
+
+                                foreach ($sorgu2 as $row){
+
+                                    echo "<br>";
+                                    echo "<b>".$row['name'].":  </b>".$row['description']."<br>";
+
+                                }
+
+
                             }else{
-                                echo"Aranan kelimeye ait değer bulunamadı";
+                                echo"<div class='alert alert-warning mt-5' style='text-align: center' role='alert'>
+                                           Aradığınız Kelimeyi Bulamadık :( </div>";
                             }
 
                         }
