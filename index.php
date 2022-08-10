@@ -117,7 +117,7 @@
 </main>
 <footer class="footer">
     <div class="container">
-        <span class="text-muted">&copy; Copyright -<?php date_default_timezone_set('Europe/Istanbul'); echo date("Y");?> </span>
+        <span class="text-muted"><small>&copy; Copyright - <?php date_default_timezone_set('Europe/Istanbul'); echo date("Y");?>  </small> </span>
     </div>
 </footer>
 </body>
